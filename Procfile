@@ -1,1 +1,1 @@
-web: bash bootstrap.sh
+web: gunicorn app:api
