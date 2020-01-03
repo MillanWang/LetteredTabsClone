@@ -1,1 +1,1 @@
-web: bash bootstrap.sh
+web: python3 run.py
