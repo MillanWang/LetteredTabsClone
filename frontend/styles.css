@@ -8,3 +8,8 @@ body{
     height: 400px;
     
 }
+
+#result-area{
+    white-space: pre;
+    font-family: Consolas,monaco,monospace;
+}
