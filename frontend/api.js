@@ -3,11 +3,14 @@ function convert() {
     var xhr = new XMLHttpRequest();
     var host = window.location.hostname;
     // Add port if running locally
+    var url = '';
     if (host === "localhost") {
-        host = `${host}:5000`
+        url = 'http://localhost:5000/conversion';
+    } else {
+        url = 'https://lettered-tabs.herokuapp.com/conversion';
     }
 
-    xhr.open("POST", `http://${host}/conversion`, true);
+    xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify({
         input: tabs
