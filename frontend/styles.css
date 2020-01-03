@@ -1,0 +1,10 @@
+body{
+    background-color: gray;
+    background-blend-mode: lighten;
+}
+
+.text{
+    width: 40%;
+    height: 400px;
+    
+}
