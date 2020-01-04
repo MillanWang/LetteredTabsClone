@@ -1,25 +1,38 @@
 def main(input_string):
+    """
+    takes a regular tablature as an input and outputs the same tabs with the numbers replaced
+    by the corresponding note letter
 
-    #Opening original tab and creating a new text file for the lettered tab
-    lettered = str()  #The returned string
+    :input_string: string representing tablature
+    :rtype: string
+    """
+
+    lettered = ""  #The returned string
 
     #Putting all lines of text into a list so that multiple lines can be analyzed at once
     list_of_lines = input_string.split("\n")
+
     for i in range(len(list_of_lines)):
+        #The split function removes the delimeter. It must be reinserted at the
+        #end of each element in the list so that the output is not a single line
         list_of_lines[i] += ("\n")
     list_of_lines.append("\n")
-    #Attaches empty line to end so that it will never end on a tab line
+    #Attaches empty line to end so that it will never end on a tab line.
+    #This is important so that handle_bars is called on the last bars of the tab
+    #if the tab happens to end on a tab line
 
     bars = list()
+    #To hold multiple tab lines as they have to be dealt with similtaneously
+    #to maintain formatting
+
     for i in range(len(list_of_lines)):
         if is_line_tab(list_of_lines[i]):
             #current line is tab. Append to bars so that they can all be handled similtaneously
             bars.append(list(list_of_lines[i]))
 
-        else:  #Finished a bar section. Handle it and
-            print("Current")
-            print(lettered)
-            if len(bars):  #Only when bars is not empty
+        else:
+            if len(bars):
+                #Finished a bar section. Handle it and attach it to return string
                 lettered += handle_bars(bars)
                 bars = list()  # resets bars to move on the next bar section
             lettered += list_of_lines[i]
@@ -29,6 +42,8 @@ def main(input_string):
 def is_line_tab(line):
     """
     True if current line is of tab format. False otherwise
+    Makes assumption that the "|" character will not be used in 
+    non tablature lines
     
     :type note: string
     :rtype: bool
@@ -39,8 +54,7 @@ def is_line_tab(line):
     if line[1] == "|" or line[2] == "|":
         #This character is used to separate the string note from the tab.
         return True
-    else:
-        return False
+    return False
 
 
 def get_offset(note):
@@ -83,23 +97,31 @@ def get_letter(fret, offset):
     :rtype: string
     """
 
-    #Switch the accidentals to suit your preference.
+    #Accidentals can be switched to suit preference.
     #I personally like a combination of flats and sharps but it is good practice
     #to periodically switch it up
     #It cycles through the notes twice because not doing so can make the offset look for an invalid index
     notes = ("A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab",
              "A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
-    if fret >= 12:
+    if fret >= 36:
+        #Should never happen
+        fret = 0
+    elif fret >= 24:
+        fret -= 24
+    elif fret >= 12:
         fret -= 12
+    else:
+        #Should never happen
+        fret = 0
     return notes[fret + offset]
 
 
 def handle_bars(bars):
     """
-    writes lettered tabs to writing_location
+    writes lettered tabs to output string
     
     :bars: list of lists of characters
-    :rtype: None
+    :rtype: string of tablature with numbers replaced by corresponding notes
     """
     numbers = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0")
     offsets = list()
@@ -107,14 +129,12 @@ def handle_bars(bars):
     #Getting combining two digit numbers into a single string and getting the offsets
     for line in bars:
 
-        #Two digit combination
+        #Two digit combination. Otherwise something like 11 may be read as two consequetive ones
         i = 0
-        while i < len(
-                line
-        ) - 1:  #Minus one so that the indexes are right. The last characters are assumed to be "\n"
-            if line[i] in numbers and line[
-                    i +
-                    1] in numbers:  #This combines the two digit frets to be read individually
+        while i < len(line) - 1:
+            #Minus one so that the indexes are right. The last characters will always be "\n"
+            if line[i] in numbers and line[i + 1] in numbers:
+                #This combines the two digit frets to be read individually
                 line[i] = line[i] + line[i + 1]
                 line[i + 1] = ""  #Not removed to preserve constant length
                 i += 2  #So that the second digit is not evaluated again
@@ -129,16 +149,14 @@ def handle_bars(bars):
 
     #Lettering
     #This is done shifting over one character at a time, evaluating
-    i = 0
-    while i < len(
-            bars[0]
-    ) - 2:  #In properly formatted tabs, all of these lines will have the same length
-        string_number = 0
-        while string_number < len(bars):
+
+    for i in range(len(bars[0]) - 2):
+        #In properly formatted tabs, all of these lines will have the same length
+        for string_number in range(len(bars)):
             if bars[string_number][i] != "":
 
-                if bars[string_number][i][
-                        0] in numbers:  #the [0] at the end looks at the first character.
+                if bars[string_number][i][0] in numbers:
+                    #the [0] at the end looks at the first character.
 
                     single_digit = len(bars[string_number][i]) == 1
 
@@ -160,11 +178,9 @@ def handle_bars(bars):
                     elif not single_digit and len(bars[string_number][i]) == 1:
                         bars[string_number][i] += "-"
 
-            string_number += 1
-        i += 1
-    writing_location = ""
+    return_string = ""
     #Writing all the lines to the file
     for line in bars:
-        writing_location += ("".join(line))
+        return_string += ("".join(line))
         #The \n is not included because it is already a part of the string
-    return writing_location
+    return return_string

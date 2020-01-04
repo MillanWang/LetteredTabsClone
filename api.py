@@ -16,7 +16,6 @@ def root():
 
 @app.route('/conversion', methods=['POST'])
 def convert():
-    print(request)
     converted = LetteredTabs.main(request.get_json()['input'])
     lettered = jsonify({"data": converted})
     return lettered, 200

@@ -1,11 +1,10 @@
 body{
-    background-color: gray;
-    background-blend-mode: lighten;
+    background-color: lightslategray;
 }
 
 .text{
-    width: 40%;
-    height: 400px;
+    width: 99.4%;
+    height: 20rem;
     
 }
 
