@@ -103,16 +103,14 @@ def get_letter(fret, offset):
     #It cycles through the notes twice because not doing so can make the offset look for an invalid index
     notes = ("A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab",
              "A", "Bb", "B", "C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab")
-    if fret >= 36:
+    if int(fret) >= 36:
         #Should never happen
         fret = 0
-    elif fret >= 24:
+    elif int(fret) >= 24:
         fret -= 24
-    elif fret >= 12:
+    elif int(fret) >= 12:
         fret -= 12
-    else:
-        #Should never happen
-        fret = 0
+
     return notes[fret + offset]
 
 
@@ -149,8 +147,9 @@ def handle_bars(bars):
 
     #Lettering
     #This is done shifting over one character at a time, evaluating
-
-    for i in range(len(bars[0]) - 2):
+    i = 0
+    max_length = len(bars[0]) - 1
+    while i < max_length:
         #In properly formatted tabs, all of these lines will have the same length
         for string_number in range(len(bars)):
             if bars[string_number][i] != "":
@@ -173,10 +172,12 @@ def handle_bars(bars):
 
                             else:
                                 bars[curr].insert(i + 1, "")
+                        max_length += 1  #The length of the bar has become one character longer.
 
                     #In the case where the fret is 2 digit and the note is one letter
                     elif not single_digit and len(bars[string_number][i]) == 1:
                         bars[string_number][i] += "-"
+        i += 1
 
     return_string = ""
     #Writing all the lines to the file

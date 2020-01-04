@@ -5,10 +5,14 @@ body{
 .text{
     width: 99.4%;
     height: 20rem;
-    
 }
 
 #result-area{
     white-space: pre;
     font-family: Consolas,monaco,monospace;
+    text-align: left;
 }
+
+form { 
+    text-align: center;
+    }
