@@ -11,8 +11,24 @@ body{
     white-space: pre;
     font-family: Consolas,monaco,monospace;
     text-align: left;
+    background-color: aliceblue;
+    padding: 1rem;
+    display: none;
 }
 
 form { 
     text-align: center;
-    }
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
+
+input[type='button']{
+    margin: 0.5rem;
+    padding: 0.5rem 4rem;
+}

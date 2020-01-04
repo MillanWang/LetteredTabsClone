@@ -10,6 +10,7 @@ function convert() {
     xhr.onload = function () {
         data = JSON.parse(xhr.response);
         var result = document.getElementById("result-area");
+        result.style.display = 'block';
         result.innerHTML = data["data"];
     }
 }
