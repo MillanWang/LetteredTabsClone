@@ -19,11 +19,11 @@ def main(input_string):
     list_of_lines.append("\n")
     #Attaches empty line to end so that it will never end on a tab line.
     #This is important so that handle_bars is called on the last bars of the tab
-    #if the tab happens to end on a tab line
+        #if the tab happens to end on a tab line
 
     bars = list()
     #To hold multiple tab lines as they have to be dealt with similtaneously
-    #to maintain formatting
+        #to maintain formatting
 
     for i in range(len(list_of_lines)):
         if is_line_tab(list_of_lines[i]):
@@ -75,7 +75,17 @@ def get_offset(note):
     lowercase_notes_sharp = ("a", "a#", "b", "c", "c#", "d", "d#", "e", "f",
                              "f#", "g", "g#")
     #Often used for high E string. Accomadates different tunings
+    
+    #if note is two characters long, it must be joined.
+    #Nothing will happen if note is one character
+    note = "".join(note)
 
+    #in some formattings, there will be a space between the tuning and the "|"
+        #This section removes it so that it will be a single letter
+    if len(note) > 1:
+        if note[1] == " ":
+            note = note[0]
+    
     if note in sharp_notes:
         return sharp_notes.index(note)
     elif note in flat_notes:
@@ -85,6 +95,7 @@ def get_offset(note):
     elif note in lowercase_notes_sharp:
         return lowercase_notes_sharp.index(note)
     else:
+        #Should never happen
         return 0
 
 
@@ -143,7 +154,7 @@ def handle_bars(bars):
         if line[1] == "|":  #Guitar string is a natural note
             offsets.append(get_offset(line[0]))
         else:  #Guitar string is an accidental note
-            offsets.append(get_offset(line[:1]))
+            offsets.append(get_offset(line[:2]))
 
     #Lettering
     #This is done shifting over one character at a time, evaluating
@@ -180,7 +191,7 @@ def handle_bars(bars):
         i += 1
 
     return_string = ""
-    #Writing all the lines to the file
+    #concatenating all the lines to return_string
     for line in bars:
         return_string += ("".join(line))
         #The \n is not included because it is already a part of the string
